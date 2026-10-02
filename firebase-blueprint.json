@@ -1,0 +1,183 @@
+{
+  "entities": {
+    "Order": {
+      "title": "Order",
+      "description": "Ticket order record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "order_number": { "type": "string" },
+        "customer_id": { "type": "string" },
+        "customer_name": { "type": "string" },
+        "customer_phone": { "type": "string" },
+        "event_id": { "type": "string" },
+        "ticket_type_id": { "type": "string" },
+        "ticket_type_name": { "type": "string" },
+        "quantity": { "type": "number" },
+        "unit_price": { "type": "number" },
+        "subtotal": { "type": "number" },
+        "discount": { "type": "number" },
+        "total_amount": { "type": "number" },
+        "payment_method": { "type": "string" },
+        "payment_status": { "type": "string" },
+        "payment_reference": { "type": "string" },
+        "wave_payment_url": { "type": "string" },
+        "created_at": { "type": "string" },
+        "paid_at": { "type": "string" }
+      },
+      "required": ["id", "order_number", "quantity", "total_amount", "payment_status"]
+    },
+    "Ticket": {
+      "title": "Ticket",
+      "description": "Validated individual entrance ticket",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "ticket_number": { "type": "string" },
+        "order_id": { "type": "string" },
+        "order_number": { "type": "string" },
+        "event_id": { "type": "string" },
+        "event_name": { "type": "string" },
+        "customer_id": { "type": "string" },
+        "customer_name": { "type": "string" },
+        "customer_phone": { "type": "string" },
+        "qr_token": { "type": "string" },
+        "ticket_type": { "type": "string" },
+        "price": { "type": "number" },
+        "status": { "type": "string" },
+        "created_at": { "type": "string" },
+        "used_at": { "type": "string" },
+        "validated_by": { "type": "string" }
+      },
+      "required": ["id", "ticket_number", "order_id", "qr_token", "status"]
+    },
+    "CheckIn": {
+      "title": "CheckIn",
+      "description": "Entrance validation audit check-in",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "ticket_id": { "type": "string" },
+        "ticket_number": { "type": "string" },
+        "qr_token": { "type": "string" },
+        "customer_name": { "type": "string" },
+        "ticket_type": { "type": "string" },
+        "scanned_at": { "type": "string" },
+        "operator": { "type": "string" },
+        "method": { "type": "string" }
+      },
+      "required": ["id", "ticket_id", "ticket_number", "scanned_at", "operator"]
+    },
+    "EventItem": {
+      "title": "EventItem",
+      "description": "Central event data",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "edition": { "type": "string" },
+        "date": { "type": "string" },
+        "time": { "type": "string" },
+        "location": { "type": "string" },
+        "venue_details": { "type": "string" },
+        "description": { "type": "string" },
+        "poster_url": { "type": "string" },
+        "status": { "type": "string" }
+      },
+      "required": ["id", "name"]
+    },
+    "TicketType": {
+      "title": "TicketType",
+      "description": "Ticket formulas and live remaining counts",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "event_id": { "type": "string" },
+        "name": { "type": "string" },
+        "price": { "type": "number" },
+        "original_price": { "type": "number" },
+        "available_quantity": { "type": "number" },
+        "sold_quantity": { "type": "number" },
+        "active": { "type": "boolean" }
+      },
+      "required": ["id", "name", "price"]
+    },
+    "ProgramItem": {
+      "title": "ProgramItem",
+      "description": "Schedule timeline item",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "time": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "order_index": { "type": "number" }
+      },
+      "required": ["id", "time", "title"]
+    },
+    "AppSettings": {
+      "title": "AppSettings",
+      "description": "Payment and contact settings",
+      "type": "object",
+      "properties": {
+        "wave_link": { "type": "string" },
+        "wave_merchant_id": { "type": "string" },
+        "whatsapp_phone_number": { "type": "string" },
+        "contact_phone": { "type": "string" },
+        "contact_email": { "type": "string" },
+        "currency": { "type": "string" }
+      },
+      "required": ["wave_link", "currency"]
+    },
+    "PromoCode": {
+      "title": "PromoCode",
+      "description": "Discount promo codes",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "code": { "type": "string" },
+        "discount_type": { "type": "string" },
+        "discount_value": { "type": "number" },
+        "expiration": { "type": "string" },
+        "usage_limit": { "type": "number" },
+        "used_count": { "type": "number" },
+        "active": { "type": "boolean" }
+      },
+      "required": ["id", "code", "discount_type", "discount_value"]
+    }
+  },
+  "firestore": {
+    "/orders/{orderId}": {
+      "schema": "#/entities/Order",
+      "description": "Central store for all customer orders"
+    },
+    "/tickets/{ticketId}": {
+      "schema": "#/entities/Ticket",
+      "description": "Central store for all generated tickets with QR tokens"
+    },
+    "/check_ins/{checkInId}": {
+      "schema": "#/entities/CheckIn",
+      "description": "Central store for all gate scans and check-ins"
+    },
+    "/events/{eventId}": {
+      "schema": "#/entities/EventItem",
+      "description": "Central event configuration"
+    },
+    "/ticket_types/{ticketTypeId}": {
+      "schema": "#/entities/TicketType",
+      "description": "Ticket pricing and quotas"
+    },
+    "/programs/{programId}": {
+      "schema": "#/entities/ProgramItem",
+      "description": "Timeline program items"
+    },
+    "/settings/{settingId}": {
+      "schema": "#/entities/AppSettings",
+      "description": "Global application settings"
+    },
+    "/promo_codes/{promoId}": {
+      "schema": "#/entities/PromoCode",
+      "description": "Promo and discount codes"
+    }
+  }
+}
